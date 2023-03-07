@@ -4,7 +4,6 @@ const cg = canvas.getContext("2d");
 //format setup
 canvas.width = innerWidth;
 canvas.height = innerHeight;
-
 //CLASS specification on Player
 class Player {
   constructor(x, y, radius, color) {
@@ -45,6 +44,9 @@ class Projectile {
   }
 }
 
+//Friction for  slowing velocity of particles
+const friction = 0.99;
+
 class Particle {
   constructor(x, y, radius, color, velocity) {
     this.x = x;
@@ -57,7 +59,7 @@ class Particle {
   //DRAW path for projectile to be displayed
   draw() {
     cg.save();
-    cg.globalAlpha = 0.1;
+    cg.globalAlpha = this.alpha;
     cg.beginPath();
     cg.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
     cg.fillStyle = this.color;
@@ -66,8 +68,11 @@ class Particle {
   }
   //FUNCTION for updating position of bullet using velocity
   update() {
+    this.velocity.x *= friction;
+    this.velocity.y *= friction;
     this.x = this.x + this.velocity.x;
     this.y = this.y + this.velocity.y;
+    this.alpha -= 0.01;
   }
 }
 
@@ -121,7 +126,16 @@ function animate() {
   });
   //draw player after clearing
   player.draw();
-  //draw projectile after cleaing
+  //remove partilces after they hit zero alpha
+  particles.forEach((particle, index) => {
+    if (particle.alpha <= 0) {
+      particles.splice(index, 1);
+    } else {
+      particle.update();
+    }
+  });
+
+  //draw projectile after cleaning
   projectiles.forEach((projectile, projectileIndex) => {
     projectile.update();
     projectile.draw();
@@ -153,14 +167,13 @@ function animate() {
       const dist = Math.hypot(projectile.x - bullet.x, projectile.y - bullet.y);
       if (dist - projectile.radius - bullet.radius < 1) {
         //Particle spawn
-        let random = Math.round(Math.random() * (10 - 5) + 5);
         let random2 = Math.round(Math.random() * (5 - 2) + 2);
 
-        for (let i = 0; i < random; i++) {
+        for (let i = 0; i < bullet.radius; i++) {
           particles.push(
             new Particle(projectile.x, projectile.y, random2, bullet.color, {
-              x: Math.random() - 0.5,
-              y: Math.random() - 0.5,
+              x: (Math.random() - 0.5) * (Math.random() * 5),
+              y: (Math.random() - 0.5) * (Math.random() * 5),
             })
           );
         }
@@ -204,7 +217,6 @@ function spawnBullet() {
       y: Math.sin(angle),
     };
     bullets.push(new Bullet(x, y, radius, color, velocity));
-    console.log("go");
   }, 1000);
 }
 

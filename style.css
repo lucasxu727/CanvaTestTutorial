@@ -1,3 +1,10 @@
 body {
   margin: 0;
 }
+
+div {
+  position: fixed;
+  color: white;
+  font-family: sans-serif;
+  user-select: none;
+}
