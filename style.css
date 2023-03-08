@@ -2,9 +2,49 @@ body {
   margin: 0;
 }
 
-div {
+.div {
+  display: flex;
   position: fixed;
   color: white;
   font-family: sans-serif;
   user-select: none;
+}
+
+.parent-center {
+  display: flex;
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.center {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 10px;
+  max-width: 28rem;
+  width: 100%;
+  padding: 10px;
+}
+
+.text1 {
+  font-weight: bold;
+  font-size: xx-large;
+}
+
+.text2 {
+  font-size: small;
+  color: grey;
+  line-height: 0px;
+}
+
+.button {
+  background-color: rgb(0, 153, 255);
+  border-radius: 20px;
+  border: 0;
+  color: white;
+  width: 90%;
+  padding: 15px;
 }

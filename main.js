@@ -43,6 +43,10 @@ class Projectile {
     this.y = this.y + this.velocity.y;
   }
 }
+//CONST for score
+const scoreEl = document.querySelector("#score");
+//LET for scoreUpd
+let score = 0;
 
 //Friction for  slowing velocity of particles
 const friction = 0.99;
@@ -151,7 +155,6 @@ function animate() {
     }
   });
   //remove projectiles once off screen
-
   bullets.forEach((bullet, index) => {
     bullet.update();
     bullet.draw();
@@ -162,10 +165,13 @@ function animate() {
       cancelAnimationFrame(animationId);
     }
 
-    //COLLISION detection for projectile and bullet
+    //COLLISION WHEN HIT detection for projectile and bullet
     projectiles.forEach((projectile, projectileIndex) => {
       const dist = Math.hypot(projectile.x - bullet.x, projectile.y - bullet.y);
       if (dist - projectile.radius - bullet.radius < 1) {
+        //Add score
+        score += 20;
+        scoreEl.innerHTML = score;
         //Particle spawn
         let random2 = Math.round(Math.random() * (5 - 2) + 2);
 
@@ -224,7 +230,6 @@ function spawnBullet() {
 
 //EVENT 'click' creates a new projectile
 addEventListener("click", (event) => {
-  console.log(projectiles);
   const angle = Math.atan2(
     event.clientY - canvas.height / 2,
     event.clientX - canvas.width / 2
