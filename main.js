@@ -47,6 +47,12 @@ class Projectile {
 const scoreEl = document.querySelector("#score");
 //LET for scoreUpd
 let score = 0;
+//CONST for parentDiv
+const startGame = document.querySelector("#startBtn");
+//CONST for startgui
+const startGui = document.querySelector("#parentDiv");
+//CONST for final score
+const finalScore = document.querySelector("#finalScore");
 
 //Friction for  slowing velocity of particles
 const friction = 0.99;
@@ -108,14 +114,21 @@ const x = canvas.width / 2;
 const y = canvas.height / 2;
 
 //VARIABLE for player creation | uses const x and y for its positioning
-const player = new Player(x, y, 25, "white");
+let player = new Player(x, y, 25, "white");
 //ARRAY creation for projectiles
-const projectiles = [];
+let projectiles = [];
 //ARRAY for creation of bullets
-const bullets = [];
+let bullets = [];
 //ARRAY for particles
-const particles = [];
+let particles = [];
 
+//FUNCTIUON INIT for restart gui
+function init() {
+  player = new Player(x, y, 25, "white");
+  projectiles = [];
+  bullets = [];
+  particles = [];
+}
 //FUNCTION for bullet animate loop
 let animationId;
 function animate() {
@@ -161,8 +174,11 @@ function animate() {
     //COLLISION detection for player and bullet
     const dist = Math.hypot(player.x - bullet.x, player.y - bullet.y);
 
+    //end game
     if (dist - player.radius - bullet.radius < 1) {
       cancelAnimationFrame(animationId);
+      startGui.style.display = "flex";
+      finalScore.innerHTML = score;
     }
 
     //COLLISION WHEN HIT detection for projectile and bullet
@@ -226,22 +242,49 @@ function spawnBullet() {
   }, 1000);
 }
 
-//FUNCTION to put a limit on how many bullets can be on the screen
+//cooldown variable
+let canClick = true;
 
 //EVENT 'click' creates a new projectile
-addEventListener("click", (event) => {
-  const angle = Math.atan2(
-    event.clientY - canvas.height / 2,
-    event.clientX - canvas.width / 2
-  );
-  const velocity = {
-    x: Math.cos(angle) * 5,
-    y: Math.sin(angle) * 5,
-  };
-  projectiles.push(
-    new Projectile(canvas.width / 2, canvas.height / 2, 5, "white", velocity)
-  );
-});
 
-animate();
-spawnBullet();
+function detectClick() {
+  addEventListener("click", (event) => {
+    if (canClick) {
+      const angle = Math.atan2(
+        event.clientY - canvas.height / 2,
+        event.clientX - canvas.width / 2
+      );
+      const velocity = {
+        x: Math.cos(angle) * 5,
+        y: Math.sin(angle) * 5,
+      };
+      projectiles.push(
+        new Projectile(
+          canvas.width / 2,
+          canvas.height / 2,
+          5,
+          "white",
+          velocity
+        )
+      );
+      canClick = false;
+      setTimeout(() => {
+        canClick = true;
+      }, 200);
+    }
+  });
+}
+
+startGame.addEventListener("click", () => {
+  if (canClick) {
+    init();
+    detectClick();
+    animate();
+    spawnBullet();
+    startGui.style.display = "none";
+    canClick = false;
+    setTimeout(() => {
+      canClick = true;
+    }, 10);
+  }
+});

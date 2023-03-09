@@ -1,5 +1,6 @@
 body {
   margin: 0;
+  background-color: black;
 }
 
 .div {
@@ -32,12 +33,14 @@ body {
 .text1 {
   font-weight: bold;
   font-size: xx-large;
+  margin-bottom: 0;
 }
 
 .text2 {
   font-size: small;
   color: grey;
-  line-height: 0px;
+  margin-top: 0;
+  line-height: 1;
 }
 
 .button {
