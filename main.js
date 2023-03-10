@@ -217,30 +217,28 @@ function animate() {
 }
 
 //FUNCTION for enemy bullet spawn
-function spawnBullet() {
-  setInterval(() => {
-    const radius = Math.random() * (40 - 6) + 6;
-    //rng for bullet spawn around the map
-    let y;
-    let x;
+setInterval(() => {
+  const radius = Math.random() * (40 - 6) + 6;
+  //rng for bullet spawn around the map
+  let y;
+  let x;
 
-    if (Math.random() > 0.5) {
-      x = Math.random() < 0.5 ? 0 - radius : canvas.width + radius;
-      y = Math.random() * canvas.height;
-    } else {
-      x = Math.random() * canvas.width;
-      y = Math.random() < 0.5 ? 0 - radius : canvas.height + radius;
-    }
+  if (Math.random() > 0.5) {
+    x = Math.random() < 0.5 ? 0 - radius : canvas.width + radius;
+    y = Math.random() * canvas.height;
+  } else {
+    x = Math.random() * canvas.width;
+    y = Math.random() < 0.5 ? 0 - radius : canvas.height + radius;
+  }
 
-    const color = `hsl(${Math.random() * 360}, 50%, 50%)`;
-    const angle = Math.atan2(canvas.height / 2 - y, canvas.width / 2 - x);
-    const velocity = {
-      x: Math.cos(angle),
-      y: Math.sin(angle),
-    };
-    bullets.push(new Bullet(x, y, radius, color, velocity));
-  }, 1000);
-}
+  const color = `hsl(${Math.random() * 360}, 50%, 50%)`;
+  const angle = Math.atan2(canvas.height / 2 - y, canvas.width / 2 - x);
+  const velocity = {
+    x: Math.cos(angle),
+    y: Math.sin(angle),
+  };
+  bullets.push(new Bullet(x, y, radius, color, velocity));
+}, 1000);
 
 //cooldown variable
 let canClick = true;
@@ -280,7 +278,6 @@ startGame.addEventListener("click", () => {
     init();
     detectClick();
     animate();
-    spawnBullet();
     startGui.style.display = "none";
     canClick = false;
     setTimeout(() => {
